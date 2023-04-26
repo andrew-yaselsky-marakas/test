@@ -1,10 +1,12 @@
 {
     "scripts": {
-        "watch": "unilime-shopify-theme watch"
+        "watch": "unilime-shopify-theme watch",
+        "build": "unilime-shopify-theme webpack --mode=production",
+        "pull": "unilime-shopify-theme shopify theme pull",
+        "push": "unilime-shopify-theme shopify theme push"
     },
     "private": true,
     "devDependencies": {
-        "@unilime/shopify-theme-dev": "^1.0.0"
+        "@unilime/shopify-theme-dev": "file:../shopify/shopify-theme-dev-tools/unilime-shopify-theme-dev-1.0.1.tgz"
     }
 }
-  
