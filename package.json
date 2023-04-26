@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "watch": "unilime-shopify-theme watch"
+    },
+    "private": true,
+    "devDependencies": {
+        "@unilime/shopify-theme-dev": "^1.0.0"
+    }
+}
+  
