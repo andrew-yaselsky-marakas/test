@@ -7,6 +7,6 @@
     },
     "private": true,
     "devDependencies": {
-        "@unilime/shopify-theme-dev": "file:../shopify/shopify-theme-dev-tools/unilime-shopify-theme-dev-1.0.1.tgz"
+        "@unilime/shopify-theme-dev": "^1.0.2"
     }
 }
