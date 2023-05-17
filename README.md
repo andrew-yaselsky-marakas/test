@@ -11,3 +11,9 @@ Starter template for Shopify projects. Uses `Dawn` theme as a base.
 3. Update env variables (See the [list of env variables](https://git.qix.sx/unilime/shopify/dev/shopify-theme-dev#env-variables)).
 4. Install dependencies `npm install`.
 5. Run `npm run watch` to start development.
+
+## Troubleshooting
+
+### **Command theme serve {dir} not found. Did you mean theme language-server**
+
+Usually, this error occurs if `SHOPIFY_CLI_BUNDLED_THEME_CLI` environment variable is set to 1. Setting it to 0 should solve this issue. This variable was required because the older versions of Shopify CLI would not run properly without it.
