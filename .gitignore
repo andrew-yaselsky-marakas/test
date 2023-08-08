@@ -9,6 +9,8 @@ ehthumbs.db
 Thumbs.db
 .idea
 .env
+.env.*
+!.env*.example
 process.env
 config.yml
 node_modules
