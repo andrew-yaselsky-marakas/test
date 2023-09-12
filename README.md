@@ -1,6 +1,4 @@
-# Shopify project template
-
-Starter template for Shopify projects. Uses `Dawn` theme as a base.
+# Project name
 
 ## Setup
 
@@ -13,8 +11,32 @@ Starter template for Shopify projects. Uses `Dawn` theme as a base.
 5. Install dependencies `npm install`.
 6. Run `npm run watch` to start development.
 
+## Deployment
+
+1. New branches make from `master`.
+2. To deploy your changes on the live theme, just create pull request to `master` branch.
+
 ## Troubleshooting
 
 ### **Command theme serve {dir} not found. Did you mean theme language-server**
 
 Usually, this error occurs if `SHOPIFY_CLI_BUNDLED_THEME_CLI` environment variable is set to 1. Setting it to 0 should solve this issue. This variable was required because the older versions of Shopify CLI would not run properly without it.
+
+## Env variables
+
+These variables can be added to `.env` file of your project.
+
+| Variable | Description |
+| -------- | ----------- |
+| SHOPIFY_STORE | Store prefix or full URL. |
+| SHOPIFY_PASSWORD | Password from `Theme Access` app. |
+| SHOPIFY_THEME_EDITOR_SYNC | If set to 1, all changes in Theme Editor will be synchronized with your local theme. If you work on a staging site, it is recommended to keep this variable disabled. |
+| SHOPIFY_CLI_BUNDLED_THEME_CLI | Set to 1 if you getting an errors related to `bundler` utility. |
+
+## Available commands
+
+| Command | Description |
+| ------- | ----------- |
+| `watch [options]` | Run both WebPack (use `--no-webpack` to turn off) and Shopify CLI in watch mode. |
+| `webpack [entries...] [options]` | Run the webpack watcher. |
+| `shopify [COMMAND]` | Run Shopify CLI. |
