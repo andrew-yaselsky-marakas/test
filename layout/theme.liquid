@@ -303,57 +303,72 @@
     </script>
 
     <script>
-      var cartItemCount = 0;
+var cartItemCount = 0;
 
-      function fetchCartItemCount() {
-        return fetch('/cart.js')
-          .then(function (response) {
-            if (!response.ok) {
-              throw new Error('Немає відновіді');
-            }
-            return response.json();
-          })
-          .then(function (cart) {
-            cartItemCount = cart.item_count;
-          });
+function fetchCartItemCount() {
+  return fetch('/cart.js')
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error('Error fetching cart');
       }
+      return response.json();
+    })
+    .then(function (cart) {
+      cartItemCount = cart.item_count;
+    });
+}
 
-      fetchCartItemCount()
-        .then(function () {
-          console.log('Кількість товарів в корзині:', cartItemCount);
-        })
-        .catch(function (error) {
-          console.error('Помилка:', error);
-      });
+document.addEventListener('DOMContentLoaded', function () {
+  const threshold = {{ settings.free_gift_threshold }};
+  const freeGiftProduct = {{ all_products[settings.free_gift_product] | json }};
 
-      document.addEventListener('DOMContentLoaded', function () {
-        const addToCartButton = document.querySelector('.product-form__submit');
-        const threshold = {{ settings.free_gift_threshold }};
-        const freeGiftProduct = {{ all_products[settings.free_gift_product] | json }};
-        
-        addToCartButton.addEventListener('click', async (e) => {
-          const quantityInput = document.querySelector('input[name="quantity"]');
-          const quantity = Number(quantityInput.value);
-          
-          cartItemCount += quantity; 
-          
-          console.log("Нова кількість: " + cartItemCount);
+  // Fetch the cart item count when the page loads
+  fetchCartItemCount()
+    .then(function () {
+      console.log('Cart item count:', cartItemCount);
+    })
+    .catch(function (error) {
+      console.error('Error:', error);
+    });
 
-          if (cartItemCount >= threshold) {
-            const variantId = freeGiftProduct.variants[0].id;
+  document.querySelector('.product-form__submit').addEventListener('click', function () {
+    const quantityInput = document.querySelector('input[name="quantity"]');
+    const quantity = Number(quantityInput.value);
 
-            console.log(cartItemCount + ">=" + threshold);
+    cartItemCount += quantity;
+    console.log('Updated cart item count:', cartItemCount);
 
-            await fetch('/cart/add.js', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                items: [{ id: variantId, quantity: 1 }],
-              }),
-            });
+    if (cartItemCount >= threshold) {
+      const variantId = freeGiftProduct.variants[0].id;
+
+      var item = {
+        items: [{ id: variantId, quantity: 1 }]
+      };
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Error updating cart');
           }
+        })
+        .then((cart) => {
+          console.log('Cart updated:', cart);
+        })
+        .catch((error) => {
+          console.error(error);
         });
-      });
+    }
+  });
+});
+
 
     </script>
 
