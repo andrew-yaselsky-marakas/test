@@ -8,6 +8,22 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Free Gift Settings",
+    "settings": [
+      {
+        "type": "number",
+        "label": "Threshold Amount",
+        "id": "free_gift_threshold",
+        "default": 100
+      },
+      {
+        "type": "product",
+        "label": "Free Gift Product",
+        "id": "free_gift_product"
+      }
+    ]
+  },  
+  {
     "name": "t:settings_schema.logo.name",
     "settings": [
       {

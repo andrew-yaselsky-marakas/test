@@ -302,6 +302,61 @@
       };
     </script>
 
+    <script>
+      var cartItemCount = 0;
+
+      function fetchCartItemCount() {
+        return fetch('/cart.js')
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error('Немає відновіді');
+            }
+            return response.json();
+          })
+          .then(function (cart) {
+            cartItemCount = cart.item_count;
+          });
+      }
+
+      fetchCartItemCount()
+        .then(function () {
+          console.log('Кількість товарів в корзині:', cartItemCount);
+        })
+        .catch(function (error) {
+          console.error('Помилка:', error);
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const addToCartButton = document.querySelector('.product-form__submit');
+        const threshold = {{ settings.free_gift_threshold }};
+        const freeGiftProduct = {{ all_products[settings.free_gift_product] | json }};
+        
+        addToCartButton.addEventListener('click', async (e) => {
+          const quantityInput = document.querySelector('input[name="quantity"]');
+          const quantity = Number(quantityInput.value);
+          
+          cartItemCount += quantity; 
+          
+          console.log("Нова кількість: " + cartItemCount);
+
+          if (cartItemCount >= threshold) {
+            const variantId = freeGiftProduct.variants[0].id;
+
+            console.log(cartItemCount + ">=" + threshold);
+
+            await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                items: [{ id: variantId, quantity: 1 }],
+              }),
+            });
+          }
+        });
+      });
+
+    </script>
+
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
