@@ -303,72 +303,81 @@
     </script>
 
     <script>
-var cartItemCount = 0;
+      var cartItemCount = 0;
 
-function fetchCartItemCount() {
-  return fetch('/cart.js')
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error('Error fetching cart');
-      }
-      return response.json();
-    })
-    .then(function (cart) {
-      cartItemCount = cart.item_count;
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  const threshold = {{ settings.free_gift_threshold }};
-  const freeGiftProduct = {{ all_products[settings.free_gift_product] | json }};
-
-  // Fetch the cart item count when the page loads
-  fetchCartItemCount()
-    .then(function () {
-      console.log('Cart item count:', cartItemCount);
-    })
-    .catch(function (error) {
-      console.error('Error:', error);
-    });
-
-  document.querySelector('.product-form__submit').addEventListener('click', function () {
-    const quantityInput = document.querySelector('input[name="quantity"]');
-    const quantity = Number(quantityInput.value);
-
-    cartItemCount += quantity;
-    console.log('Updated cart item count:', cartItemCount);
-
-    if (cartItemCount >= threshold) {
-      const variantId = freeGiftProduct.variants[0].id;
-
-      var item = {
-        items: [{ id: variantId, quantity: 1 }]
-      };
-
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-      })
-        .then((response) => {
-          if (response.ok) {
+      function fetchCartItemCount() {
+        return fetch('/cart.js')
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error('Error fetching cart');
+            }
             return response.json();
-          } else {
-            throw new Error('Error updating cart');
-          }
-        })
-        .then((cart) => {
-          console.log('Cart updated:', cart);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  });
-});
+          })
+          .then(function (cart) {
+            console.log(cart);
+            cartItemCount = cart.item_count;
+          });
+      }
 
+      document.addEventListener('DOMContentLoaded', function () {
+        const threshold = {{ settings.free_gift_threshold }};
+        const freeGiftProduct = {{ all_products[settings.free_gift_product] | json }};
+
+        fetchCartItemCount()
+          .then(function () {
+            console.log('Cart item count:', cartItemCount);
+          })
+          .catch(function (error) {
+            console.error('Error:', error);
+          });
+
+        const actionButton = document.querySelector('.product-form__submit');
+
+        actionButton.addEventListener('click', function () {
+          setTimeout(function() {
+          
+            const quantityInput = document.querySelector('input[name="quantity"]');
+            const quantity = Number(quantityInput.value);
+
+            cartItemCount += quantity;
+            console.log('Updated cart item count:', cartItemCount);
+
+            if (cartItemCount >= threshold) {
+              const variantId = freeGiftProduct.variants[0].id;
+
+              var item = {
+                items: [{ id: variantId, quantity: 1 }]
+              };
+
+              console.log(item);
+
+              fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(item),
+              })
+                .then((response) => {
+                  console.log(response);
+                  if (response.ok) {
+                    return response.json();
+                  } else {
+                    throw new Error('Error updating cart');
+                  }
+                })
+                .then((cart) => {
+                  console.log('Cart updated:', cart);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            }
+
+          }, 1000);
+
+        });
+      });
 
     </script>
 
